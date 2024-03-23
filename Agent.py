@@ -68,16 +68,16 @@ class GameMaster:
         for i in range(self._n):
             for j in range(self._m):
                 if self._map[i][j] == 1:
-                    pygame.draw.rect(screen, (255, 255, 255), (i * 50, j * 50, 50, 50))
+                    pygame.draw.rect(screen, (0, 0, 0), (j * 50, i * 50, 50, 50))
                 elif self._map[i][j] == 2:
-                    pygame.draw.rect(screen, (0, 255, 0), (i * 50, j * 50, 50, 50))
+                    pygame.draw.rect(screen, (0, 255, 0), (j * 50, i * 50, 50, 50))
                 elif self._map[i][j] == 3:
-                    pygame.draw.rect(screen, (255, 0, 0), (i * 50, j * 50, 50, 50))
+                    pygame.draw.rect(screen, (255, 0, 0), (j * 50, i * 50, 50, 50))
         pygame.display.flip()
 
     def play(self):
         pygame.init()
-        screen = pygame.display.set_mode((self._n * 50, self._m * 50))
+        screen = pygame.display.set_mode((self._m * 50, self._n * 50))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
