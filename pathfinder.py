@@ -3,20 +3,29 @@ class position():
     def __init__(self, x : int, y: int):
         self.x = x
         self.y = y
+    def __eq__(self, other ) -> bool:
+        if other == None:
+            return False
+        return self.x == other.x and self.y == other.y
+    def __lt__(self, other) -> bool:
+        if other == None:
+            return True
+        return self.x < other.x or (self.x == other.x and self.y < other.y)
+    
+    
 
 def get_possible_moves(map : list[list[int]], x : int, y : int) -> list[position]:
     moves : list[position] = []
     n = len(map)
     m = len(map[0])
-    if x - 1 >= 0 and map[x - 1][y] != 1:
-        moves.append(position(x - 1, y))
-    if x + 1 < n and map[x + 1][y] != 1:
-        moves.append(position(x + 1, y))
-    if y - 1 >= 0 and map[x][y - 1] != 1:
-        moves.append(position(x, y - 1))
-    if y + 1 < m and map[x][y + 1] != 1:
-        moves.append((position(x, y + 1)))
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if i == 0 and j == 0:
+                continue
+            if 0 <= x + i < n and 0 <= y + j < m and map[x + i][y + j] != 1:
+                moves.append(position(x + i, y + j))
     return moves
+
 
 def get_heuristic(map : list[list[int]], x : int, y : int, target : position) -> int:
     return abs(x - target.x) + abs(y - target.y)
