@@ -50,9 +50,11 @@ class GameMaster:
                 self._update_screen(screen)
                 if self.is_game_over():
                     break
-                self._turn += 1
                 if self._turn % self._seekerAnnounceInterval == 0:
                     self._seeker.hiderLastPos = self._hider.annoucePos()
+                else: 
+                    self._seeker.hiderLastPos = None
+                self._turn += 1
                 previousSeekerPos = self._seeker.position
                 self._seeker.move(self._hidden_map)
                 self._map[previousSeekerPos.x][previousSeekerPos.y] = 0
