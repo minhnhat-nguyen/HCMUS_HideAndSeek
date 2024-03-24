@@ -51,7 +51,7 @@ def a_star(map : list[list[int]], start : position, target : position) -> list[p
                 heapq.heappush(pq, (f[next.x][next.y], next))
     return []
 
-def bfs(map : list[list[int]], start : position, target : position) -> list[list[int]]
+def bfs(map : list[list[int]], start : position, target : position) -> list[list[int]]:
     n = len(map)
     m = len(map[0])
     visited = [[False for _ in range(m)] for _ in range(n)]
