@@ -1,4 +1,3 @@
-#from Agent import Agent
 from Hider import Hider
 from Seeker import Seeker
 from pathfinder import bresenham, position

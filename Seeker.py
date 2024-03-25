@@ -1,6 +1,6 @@
 from pathfinder import a_star, position, get_heuristic
 from Agent import Agent
-import GameMaster, random
+import GameMaster
 
 class Seeker(Agent):
     def __init__(self, x: int, y: int) -> None:
@@ -27,5 +27,4 @@ class Seeker(Agent):
         if self.__path:
             self._position = self.__path.pop(0)
         print(self._position, self.__target, self.__hiderInSight, self.__hiderLastPos)
-        #if (self._position == position(8,3)): exit()
         return self._position
