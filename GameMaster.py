@@ -9,6 +9,7 @@ class GameMaster:
     hidden_map : list[list[int]]
     __hiderAnnounceInterval = 2
     __seekerObserveRange = 3
+    __hiderObserveRange = 2
     __turn = 0
     __seeker : Seeker = Seeker(0, 0)
     __hiders : list[Hider] = []
@@ -66,6 +67,18 @@ class GameMaster:
         if GameMaster.__turn % GameMaster.__hiderAnnounceInterval == 0:
             return [hider.getPosition() for hider in GameMaster.__hiders if not hider.isFound()]
         return None
+    
+    @staticmethod
+    def hiderGetSurrounding(hider: Hider) -> list[position]:
+        InSight : list[position] = []
+        if hider.isFound(): return InSight
+        if not (abs(GameMaster.__seeker.getPosition().x - hider.getPosition().x) <= GameMaster.__hiderObserveRange
+        and abs(GameMaster.__seeker.getPosition().y - hider.getPosition().y) <= GameMaster.__hiderObserveRange):
+            return InSight
+        for pos in bresenham(GameMaster.__seeker.getPosition(), hider.getPosition()):
+            if GameMaster.__map[pos.x][pos.y] == 1:
+                return InSight
+        return [GameMaster.__seeker.getPosition()]
 
     def play(self):
         pygame.init()
