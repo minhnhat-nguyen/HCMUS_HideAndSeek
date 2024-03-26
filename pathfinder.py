@@ -89,7 +89,9 @@ def bfs(start : position, target : list[position]) -> list[list[int]]:
             bfs_map[next.x][next.y] = bfs_map[current.x][current.y] + 1
     return bfs_map
 
-def bresenham(a: position, b: position) -> list[position]:
+def bresenham(p1: position, p2: position) -> list[position]:
+    a = position(p1.x, p1.y)
+    b = position(p2.x, p2.y)
     m = abs(b.y - a.y)
     n = abs(b.x - a.x)
     dx = 1 if a.x < b.x else -1

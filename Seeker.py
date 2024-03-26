@@ -18,13 +18,16 @@ class Seeker(Agent):
         if len(self.__hiderInSight) != 0:
             minIndex = min(range(len(self.__hiderInSight)), 
                            key=lambda i: get_heuristic(self._position, self.__hiderInSight[i]))
+            self.__target = self.__hiderInSight[minIndex]
+            self.__path = a_star(self._position, self.__target)[1:]
         else:
+            if self._position in self.__hiderLastPos:
+                self.__hiderLastPos.remove(self._position) 
             minIndex = min(range(len(self.__hiderLastPos)), 
                            key=lambda i: get_heuristic(self._position, self.__hiderLastPos[i]))
-        if self.__target != self.__hiderLastPos[minIndex]:
-            self.__target = self.__hiderLastPos[minIndex]
-            self.__path = a_star(self._position, self.__target)
-        if self.__path:
-            self._position = self.__path.pop(0)
+            if self.__target != self.__hiderLastPos[minIndex]:
+                self.__target = self.__hiderLastPos[minIndex]
+                self.__path = a_star(self._position, self.__target)[1:]
+        self._position = self.__path.pop(0)
         print(self._position, self.__target, self.__hiderInSight, self.__hiderLastPos)
         return self._position

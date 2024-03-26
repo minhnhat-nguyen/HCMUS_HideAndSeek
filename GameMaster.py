@@ -100,3 +100,4 @@ class GameMaster:
                     if hider.getPosition() == GameMaster.__seeker.getPosition():
                         hider.markFound()
                 GameMaster.__turn += 1
+                pygame.time.wait(100)
