@@ -2,12 +2,13 @@ from abc import abstractmethod
 from pathfinder import position
 from pathfinder import get_possible_moves
 
+
 class Agent:
     def __init__(self, x: int, y: int) -> None:
-        self._position : position = position(x, y)
+        self._position = position(x, y)
         self.point = 100
         self.path = []
-        
+
     @abstractmethod
     def move(self) -> position:
         pass
