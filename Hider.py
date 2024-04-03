@@ -1,7 +1,7 @@
 import random
 from pathfinder import position
 from Agent import Agent
-
+import GameMaster
 
 class Hider(Agent):
     def __init__(self, x: int, y: int) -> None:
@@ -21,7 +21,8 @@ class Hider(Agent):
     def annoucePos(self) -> position:
         if self.__isFound:
             return position(-100000, -100000)
-        return position(
-            max(0, self._position.x + int(random.uniform(-2, 2))),
-            max(0, self._position.y + int(random.uniform(-2, 2)))
-        )
+        return random.choices(
+            [position(x,y) for x in range(-2 ,3) for y in range(-2,3)
+                    if GameMaster.GameMaster.hidden_map[x][y] == 0],
+            k = 1
+        )[0]
