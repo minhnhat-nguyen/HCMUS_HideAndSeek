@@ -1,8 +1,7 @@
 from Hider import Hider
 from Seeker import Seeker
 from pathfinder import bresenham, position
-import pygame, copy
-
+import pygame, copy, uuid
 
 class GameMaster:
     __map: list[list[int]]
@@ -50,8 +49,8 @@ class GameMaster:
         pygame.display.flip()
 
     @staticmethod
-    def seekerGetSurrounding() -> list[position]:
-        InSight: list[position] = []
+    def seekerGetSurrounding() -> dict[uuid.UUID, position]:
+        InSight: dict[uuid.UUID, position] = {}
         for hider in GameMaster.__hiders:
             if hider.isFound():
                 continue
@@ -70,35 +69,33 @@ class GameMaster:
                     isObserable = False
                     break
             if isObserable:
-                InSight.append(hider.getPosition())
+                InSight[hider.id] = hider.getPosition()
         return InSight
+    
 
     @staticmethod
-    def seekerGetAnnouncement() -> list[position] | None:
+    def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
         if GameMaster.__turn % GameMaster.__hiderAnnounceInterval == 0:
-            return [
-                hider.annoucePos()
-                for hider in GameMaster.__hiders
-                if not hider.isFound()
-            ]
+            return {
+                hider.id: hider.annoucePos()[1] for hider in GameMaster.__hiders
+            }
         return None
 
     @staticmethod
-    def hiderGetSurrounding(hider: Hider) -> list[position]:
-        InSight: list[position] = []
+    def hiderGetSurrounding(hider: Hider) -> position | None:
         if hider.isFound():
-            return InSight
+            return None
         if not (
             abs(GameMaster.__seeker.getPosition().x - hider.getPosition().x)
             <= GameMaster.__hiderObserveRange
             and abs(GameMaster.__seeker.getPosition().y - hider.getPosition().y)
             <= GameMaster.__hiderObserveRange
         ):
-            return InSight
+            return None
         for pos in bresenham(GameMaster.__seeker.getPosition(), hider.getPosition()):
             if GameMaster.__map[pos.x][pos.y] == 1:
-                return InSight
-        return [GameMaster.__seeker.getPosition()]
+                return None
+        return hider.getPosition()
 
     def play(self):
         pygame.init()

@@ -1,10 +1,11 @@
 from abc import abstractmethod
 from pathfinder import position
 from pathfinder import get_possible_moves
-
+import uuid 
 
 class Agent:
     def __init__(self, x: int, y: int) -> None:
+        self.id = uuid.uuid4()
         self._position = position(x, y)
         self.point = 100
         self.path = []

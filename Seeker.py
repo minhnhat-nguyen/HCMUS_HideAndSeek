@@ -12,7 +12,7 @@ class Seeker(Agent):
         self.__hiderInSight: list[position] = []
 
     def move(self) -> position:
-        self.__hiderInSight = GameMaster.GameMaster.seekerGetSurrounding()
+        """self.__hiderInSight = GameMaster.GameMaster.seekerGetSurrounding()
         annc_list: list[position] | None = GameMaster.GameMaster.seekerGetAnnouncement()
         if annc_list is not None:
             self.__hiderLastPos = annc_list
@@ -36,4 +36,6 @@ class Seeker(Agent):
         if (len(self.__path) > 0):
             self._position = self.__path.pop(0)
         print(self._position, self.__target, self.__hiderInSight, self.__hiderLastPos)
-        return self._position
+        return self._position"""
+        raise NotImplementedError
+
