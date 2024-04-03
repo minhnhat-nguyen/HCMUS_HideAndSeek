@@ -25,7 +25,7 @@ class position:
 
 
 def get_possible_moves(x: int, y: int) -> list[position]:
-    moves: list[position] = []
+    moves: list[position] = [position(x, y)]
     n = len(GameMaster.GameMaster.hidden_map)
     m = len(GameMaster.GameMaster.hidden_map[0])
     for i in range(-1, 2):
