@@ -15,7 +15,11 @@ class GameMaster:
 
     def __init__(self, filename: str) -> None:
         with open(filename, "r") as file:
+            pygame.init()
             self._n, self._m = [int(x) for x in next(file).split()]
+            resolution = pygame.display.Info()
+            self._blockSize = min(resolution.current_w // (self._m + 2), 
+                                  resolution.current_h // (self._n + 2)) 
             GameMaster.__map = [[int(x) for x in line[:-1]] for line in file]
             for i in range(self._n):
                 for j in range(self._m):
@@ -41,11 +45,11 @@ class GameMaster:
         for i in range(self._n):
             for j in range(self._m):
                 if GameMaster.__map[i][j] == 1:
-                    pygame.draw.rect(screen, (0, 0, 0), (j * 50, i * 50, 50, 50))
+                    pygame.draw.rect(screen, (0, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
                 elif GameMaster.__map[i][j] == 2:
-                    pygame.draw.rect(screen, (0, 255, 100), (j * 50, i * 50, 50, 50))
+                    pygame.draw.rect(screen, (0, 255, 100), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
                 elif GameMaster.__map[i][j] == 3:
-                    pygame.draw.rect(screen, (255, 0, 0), (j * 50, i * 50, 50, 50))
+                    pygame.draw.rect(screen, (255, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
         pygame.display.flip()
 
     @staticmethod
@@ -77,7 +81,7 @@ class GameMaster:
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
         if GameMaster.__turn % GameMaster.__hiderAnnounceInterval == 0:
             return {
-                hider.id: hider.annoucePos()[1] for hider in GameMaster.__hiders
+                hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders
             }
         return None
 
@@ -98,9 +102,8 @@ class GameMaster:
         return hider.getPosition()
 
     def play(self):
-        pygame.init()
         pygame.time.Clock().tick(20)
-        screen = pygame.display.set_mode((self._m * 50, self._n * 50))
+        screen = pygame.display.set_mode((self._m * self._blockSize, self._n * self._blockSize))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
