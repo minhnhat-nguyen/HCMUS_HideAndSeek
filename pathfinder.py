@@ -14,9 +14,6 @@ class position:
             return False
         return self.x == other.x and self.y == other.y
 
-    def __lt__(self, other: position) -> bool:
-        return self.x < other.x or (self.x == other.x and self.y < other.y)
-
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"
 
