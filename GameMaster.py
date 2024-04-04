@@ -53,7 +53,7 @@ class GameMaster:
                     hider.markFound()
                     GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
                     return
-        val = GameMaster.__map[agent.getPosition().x][agent.getPosition().y]
+        val = 3 if type(agent) == Seeker else 2
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
         agent._position = pos
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = val
