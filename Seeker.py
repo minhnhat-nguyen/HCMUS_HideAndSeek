@@ -8,7 +8,7 @@ class Seeker(Agent):
         self.__path: dict[uuid.UUID, list[position]] = {}
         self.__hiderLastPos: dict[uuid.UUID, position | None] = {}
     
-    def move(self) -> position:
+    def move(self) -> None:
         announcement = GameMaster.GameMaster.seekerGetAnnouncement()
         if announcement:
             for id, pos in announcement.items():
@@ -17,6 +17,10 @@ class Seeker(Agent):
         for id, pos in observed.items():
             self.__hiderLastPos[id] = pos
             self.__path[id] = a_star(self.getPosition(), pos)[1:]
+        for id, pos in self.__hiderLastPos.items():
+            if self._position == pos:
+                self.__hiderLastPos[id] = None
+                self.__path.pop(id, None)
         if not self.__path:
             minID = None
             for id, pos in self.__hiderLastPos.items():
@@ -29,21 +33,22 @@ class Seeker(Agent):
                     continue
                 else:
                     minID = id if get_heuristic(self.getPosition(), pos) < get_heuristic(self.getPosition(), self.__hiderLastPos[minID]) else minID
-            if not minID:
-                self._position = random.choice(self._get_posible_moves())
-                return self._position
-            else:
+            if minID:
                 self.__path[minID] = a_star(self.getPosition(), self.__hiderLastPos[minID])
+            else:
+                GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
+                return
 
-        #find shortest list in path
         minID = None
         minLen = float("inf")
         for id, path in self.__path.items():
             if len(path) < minLen:
                 minLen = len(path)
                 minID = id
-        self._position = self.__path[minID].pop(0)
+        if not minID or len(self.__path[minID]) == 0:
+            GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
+            return
+        GameMaster.GameMaster.AgentMove(self, self.__path[minID].pop(0))
         if not self.__path[minID]:
             self.__path.pop(minID)
             self.__hiderLastPos[minID] = None
-        return self._position

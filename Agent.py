@@ -11,7 +11,7 @@ class Agent:
         self.path = []
 
     @abstractmethod
-    def move(self) -> position:
+    def move(self) -> None:
         pass
 
     def _get_posible_moves(self) -> list[position]:

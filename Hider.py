@@ -1,17 +1,27 @@
-import random
-from pathfinder import position
+from pathfinder import position, get_heuristic, bfs
 from Agent import Agent
-import GameMaster
-import uuid
+import GameMaster, uuid, random
 
 class Hider(Agent):
     def __init__(self, x: int, y: int) -> None:
         super().__init__(x, y)
         self.__isFound = False
 
-    def move(self) -> position:
-        self._position = random.choice(self._get_posible_moves())
-        return self._position
+    def move(self) -> None:
+        seekerInRange = GameMaster.GameMaster.hiderGetSurrounding(self)
+        if seekerInRange:
+            print(seekerInRange)
+            moves = self._get_posible_moves()
+            length = 0
+            pos: position = position(-1, -1)
+            for move in moves:
+                if get_heuristic(move, seekerInRange) > length:
+                    length = get_heuristic(move, seekerInRange)
+                    pos = move
+            print(length)
+            GameMaster.GameMaster.AgentMove(self, pos)
+        else:    
+            GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
 
     def isFound(self) -> bool:
         return self.__isFound

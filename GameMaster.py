@@ -12,7 +12,7 @@ class GameMaster:
     __turn = 0
     __seeker: Seeker = Seeker(0, 0)
     __hiders: list[Hider] = []
-
+    hiderMove = True
     def __init__(self, filename: str) -> None:
         with open(filename, "r") as file:
             pygame.init()
@@ -39,6 +39,26 @@ class GameMaster:
             if not hider.isFound():
                 return False
         return True
+
+    @staticmethod
+    def AgentMove(agent: Hider | Seeker, pos: position) -> None:
+        if pos not in agent._get_posible_moves(): raise ValueError("Invalid Move")
+        if (type(agent) == Hider and pos == GameMaster.__seeker.getPosition()):
+            agent.markFound()
+            GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
+            return
+        elif type(agent) == Seeker:
+            for hider in GameMaster.__hiders:
+                if hider.getPosition() == pos:
+                    hider.markFound()
+                    GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
+                    return
+        val = GameMaster.__map[agent.getPosition().x][agent.getPosition().y]
+        GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
+        agent._position = pos
+        GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = val
+        
+
 
     def __update_screen(self, screen: pygame.Surface):
         screen.fill((255, 255, 255))
@@ -112,16 +132,11 @@ class GameMaster:
             self.__update_screen(screen)
             if self.is_game_over():
                 print("Game Over")
-                break
-            GameMaster.__map[GameMaster.__seeker.getPosition().x][
-                GameMaster.__seeker.getPosition().y
-            ] = 0
             GameMaster.__seeker.move()
-            GameMaster.__map[GameMaster.__seeker.getPosition().x][
-                GameMaster.__seeker.getPosition().y
-            ] = 3
-            for hider in GameMaster.__hiders:
-                if hider.getPosition() == GameMaster.__seeker.getPosition():
-                    hider.markFound()
+            if GameMaster.hiderMove:
+                for hider in GameMaster.__hiders:
+                    if hider.isFound(): continue
+                    hider.move()
+
             GameMaster.__turn += 1
             pygame.time.wait(100)
