@@ -2,12 +2,13 @@ from pathfinder import a_star, position, get_heuristic
 from Agent import Agent
 import GameMaster, uuid, random
 
+
 class Seeker(Agent):
     def __init__(self, x: int, y: int) -> None:
         super().__init__(x, y)
         self.__path: dict[uuid.UUID, list[position]] = {}
         self.__hiderLastPos: dict[uuid.UUID, position | None] = {}
-    
+
     def move(self) -> None:
         announcement = GameMaster.GameMaster.seekerGetAnnouncement()
         if announcement:
@@ -22,9 +23,11 @@ class Seeker(Agent):
                 self.__path.pop(id, None)
         self.__path = {}
         for id, pos in self.__hiderLastPos.items():
-            if not pos: continue
+            if not pos:
+                continue
             self.__path[id] = a_star(self.getPosition(), pos)
-            if not self.__path[id]: self.__path.pop(id)
+            if not self.__path[id]:
+                self.__path.pop(id)
             elif self.__path[id][0] == self.getPosition():
                 self.__path[id].pop(0)
 
@@ -35,7 +38,9 @@ class Seeker(Agent):
                 minLen = len(path)
                 minID = id
         if not minID or len(self.__path[minID]) == 0:
-            GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
+            GameMaster.GameMaster.AgentMove(
+                self, random.choice(self._get_posible_moves())
+            )
             return
         GameMaster.GameMaster.AgentMove(self, self.__path[minID].pop(0))
         if not self.__path[minID]:
