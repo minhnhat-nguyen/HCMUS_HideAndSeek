@@ -57,8 +57,6 @@ class GameMaster:
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
         agent._position = pos
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = val
-        
-
 
     def __update_screen(self, screen: pygame.Surface):
         screen.fill((255, 255, 255))
@@ -95,7 +93,6 @@ class GameMaster:
             if isObserable:
                 InSight[hider.id] = hider.getPosition()
         return InSight
-    
 
     @staticmethod
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:

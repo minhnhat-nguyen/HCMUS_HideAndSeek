@@ -1,7 +1,8 @@
 from abc import abstractmethod
 from pathfinder import position
 from pathfinder import get_possible_moves
-import uuid 
+import uuid
+
 
 class Agent:
     def __init__(self, x: int, y: int) -> None:

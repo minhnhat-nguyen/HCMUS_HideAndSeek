@@ -19,7 +19,7 @@ class position:
 
     def __repr__(self) -> str:
         return f"({self.x}, {self.y})"
-    
+
     def __add__(self, other: position) -> position:
         return position(self.x + other.x, self.y + other.y)
 
