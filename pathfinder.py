@@ -34,13 +34,11 @@ class PriorityQueueItem:
 
 
 def get_possible_moves(x: int, y: int) -> list[position]:
-    moves: list[position] = [position(x, y)]
+    moves: list[position] = []
     n = len(GameMaster.GameMaster.hidden_map)
     m = len(GameMaster.GameMaster.hidden_map[0])
     for i in range(-1, 2):
         for j in range(-1, 2):
-            if i == 0 and j == 0:
-                continue
             if (
                 0 <= x + i < n
                 and 0 <= y + j < m
@@ -51,7 +49,7 @@ def get_possible_moves(x: int, y: int) -> list[position]:
 
 
 def get_heuristic(start: position, target: position) -> float:
-    return math.hypot(start.x - target.x, start.y - target.y)
+    return max(abs(start.x - target.x), abs(start.y - target.y))
 
 
 def a_star(start: position, target: position) -> list[position]:
@@ -66,7 +64,7 @@ def a_star(start: position, target: position) -> list[position]:
     pq = [PriorityQueueItem(f[start.x][start.y], start)]
     while pq:
         current = heapq.heappop(pq).pos
-        if current.x == target.x and current.y == target.y:
+        if current == target:
             path: list[position] = []
             while current is not None:
                 path.append(current)

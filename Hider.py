@@ -11,13 +11,14 @@ class Hider(Agent):
         seekerInRange = GameMaster.GameMaster.hiderGetSurrounding(self)
         if seekerInRange:
             moves = self._get_posible_moves()
-            length = 0
-            pos: position = position(-1, -1)
+            length = get_heuristic(self._position, seekerInRange)
+            pos: position | None = None
             for move in moves:
                 if get_heuristic(move, seekerInRange) > length:
                     length = get_heuristic(move, seekerInRange)
                     pos = move
-            GameMaster.GameMaster.AgentMove(self, pos)
+            print(f"{self._position} {seekerInRange} {pos}")
+            GameMaster.GameMaster.AgentMove(self, pos if pos else random.choice(moves))
         else:    
             GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
 

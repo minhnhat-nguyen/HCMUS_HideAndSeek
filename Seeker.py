@@ -42,7 +42,14 @@ class Seeker(Agent):
                 self, random.choice(self._get_posible_moves())
             )
             return
-        GameMaster.GameMaster.AgentMove(self, self.__path[minID].pop(0))
+        GameMaster.GameMaster.AgentMove(
+            self,
+            (
+                self.__path[minID].pop(0)
+                if random.random() < 0.9
+                else random.choice(self._get_posible_moves())
+            ),
+        )
         if not self.__path[minID]:
             self.__path.pop(minID)
             self.__hiderLastPos[minID] = None

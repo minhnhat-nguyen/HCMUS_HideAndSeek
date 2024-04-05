@@ -116,7 +116,7 @@ class GameMaster:
         for pos in bresenham(GameMaster.__seeker.getPosition(), hider.getPosition()):
             if GameMaster.__map[pos.x][pos.y] == 1:
                 return None
-        return hider.getPosition()
+        return GameMaster.__seeker.getPosition()
 
     def play(self):
         pygame.time.Clock().tick(20)
