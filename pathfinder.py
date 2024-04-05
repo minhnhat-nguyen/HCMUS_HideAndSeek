@@ -14,9 +14,6 @@ class position:
             return False
         return self.x == other.x and self.y == other.y
 
-    def __lt__(self, other: position) -> bool:
-        return self.x < other.x or (self.x == other.x and self.y < other.y)
-
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"
 
@@ -25,6 +22,15 @@ class position:
     
     def __add__(self, other: position) -> position:
         return position(self.x + other.x, self.y + other.y)
+
+
+class PriorityQueueItem:
+    def __init__(self, f_score: float, pos: position) -> None:
+        self.f_score = f_score
+        self.pos = pos
+
+    def __lt__(self, other: PriorityQueueItem):
+        return self.f_score < other.f_score
 
 
 def get_possible_moves(x: int, y: int) -> list[position]:
@@ -52,17 +58,17 @@ def a_star(start: position, target: position) -> list[position]:
     n = len(GameMaster.GameMaster.hidden_map)
     m = len(GameMaster.GameMaster.hidden_map[0])
     visited = [[False for _ in range(m)] for _ in range(n)]
-    parent = [[position(-1, -1) for _ in range(m)] for _ in range(n)]
+    parent: list[list[position | None]] = [[None for _ in range(m)] for _ in range(n)]
     g = [[float("inf") for _ in range(m)] for _ in range(n)]
     g[start.x][start.y] = 0
     f = [[float("inf") for _ in range(m)] for _ in range(n)]
     f[start.x][start.y] = get_heuristic(start, target)
-    pq = [(f[start.x][start.y], start)]
+    pq = [PriorityQueueItem(f[start.x][start.y], start)]
     while pq:
-        _, current = heapq.heappop(pq)
+        current = heapq.heappop(pq).pos
         if current.x == target.x and current.y == target.y:
             path: list[position] = []
-            while current.x != -1 and current.y != -1:
+            while current is not None:
                 path.append(current)
                 current = parent[current.x][current.y]
             return path[::-1]
@@ -75,7 +81,7 @@ def a_star(start: position, target: position) -> list[position]:
                 g[next.x][next.y] = new_g
                 f[next.x][next.y] = new_g + get_heuristic(next, target)
                 parent[next.x][next.y] = current
-                heapq.heappush(pq, (f[next.x][next.y], next))
+                heapq.heappush(pq, PriorityQueueItem(f[next.x][next.y], next))
     return []
 
 
