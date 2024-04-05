@@ -12,7 +12,7 @@ class Agent:
         self.path = []
 
     @abstractmethod
-    def move(self) -> None:
+    def move(self, step: int) -> None:
         pass
 
     def _get_posible_moves(self) -> list[position]:

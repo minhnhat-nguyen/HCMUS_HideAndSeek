@@ -39,6 +39,8 @@ def get_possible_moves(x: int, y: int) -> list[position]:
     m = len(GameMaster.GameMaster.hidden_map[0])
     for i in range(-1, 2):
         for j in range(-1, 2):
+            if i == 0 and j == 0:
+                continue
             if (
                 0 <= x + i < n
                 and 0 <= y + j < m

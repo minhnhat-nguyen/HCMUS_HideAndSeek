@@ -9,7 +9,7 @@ class Seeker(Agent):
         self.__path: dict[uuid.UUID, list[position]] = {}
         self.__hiderLastPos: dict[uuid.UUID, position | None] = {}
 
-    def move(self) -> None:
+    def move(self, step: int) -> None:
         announcement = GameMaster.GameMaster.seekerGetAnnouncement()
         if announcement:
             for id, pos in announcement.items():
@@ -22,14 +22,16 @@ class Seeker(Agent):
                 self.__hiderLastPos[id] = None
                 self.__path.pop(id, None)
         self.__path = {}
-        for id, pos in self.__hiderLastPos.items():
-            if not pos:
-                continue
-            self.__path[id] = a_star(self.getPosition(), pos)
-            if not self.__path[id]:
-                self.__path.pop(id)
-            elif self.__path[id][0] == self.getPosition():
-                self.__path[id].pop(0)
+        
+        if (step % 1 == 0):
+            for id, pos in self.__hiderLastPos.items():
+                if not pos:
+                    continue
+                self.__path[id] = a_star(self.getPosition(), pos)
+                if not self.__path[id]:
+                    self.__path.pop(id)
+                elif self.__path[id][0] == self.getPosition():
+                    self.__path[id].pop(0)
 
         minID = None
         minLen = float("inf")
@@ -42,11 +44,12 @@ class Seeker(Agent):
                 self, random.choice(self._get_posible_moves())
             )
             return
+        print(f"{self.getPosition()} {self.__path[minID]}")
         GameMaster.GameMaster.AgentMove(
             self,
             (
                 self.__path[minID].pop(0)
-                if random.random() < 0.9
+                if len(self.__path[minID]) >= 5 or random.random() < 0.90
                 else random.choice(self._get_posible_moves())
             ),
         )

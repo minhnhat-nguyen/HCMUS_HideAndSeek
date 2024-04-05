@@ -9,7 +9,7 @@ class GameMaster:
     __hiderAnnounceInterval = 5
     __seekerObserveRange = 3
     __hiderObserveRange = 2
-    __turn = 0
+    step = 0
     __seeker: Seeker = Seeker(0, 0)
     __hiders: list[Hider] = []
     hiderMove = True
@@ -52,7 +52,6 @@ class GameMaster:
                 if hider.getPosition() == pos:
                     hider.markFound()
                     GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
-                    return
         val = 3 if type(agent) == Seeker else 2
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
         agent._position = pos
@@ -96,7 +95,7 @@ class GameMaster:
 
     @staticmethod
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
-        if GameMaster.__turn % GameMaster.__hiderAnnounceInterval == 0:
+        if GameMaster.step % GameMaster.__hiderAnnounceInterval == 0:
             return {
                 hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders
             }
@@ -129,11 +128,11 @@ class GameMaster:
             self.__update_screen(screen)
             if self.is_game_over():
                 print("Game Over")
-            GameMaster.__seeker.move()
+            GameMaster.__seeker.move(self.step)
             if GameMaster.hiderMove:
                 for hider in GameMaster.__hiders:
                     if hider.isFound(): continue
-                    hider.move()
+                    hider.move(self.step)
 
-            GameMaster.__turn += 1
+            GameMaster.step += 1
             pygame.time.wait(100)

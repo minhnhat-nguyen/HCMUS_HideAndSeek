@@ -7,7 +7,7 @@ class Hider(Agent):
         super().__init__(x, y)
         self.__isFound = False
 
-    def move(self) -> None:
+    def move(self, step: int) -> None:
         seekerInRange = GameMaster.GameMaster.hiderGetSurrounding(self)
         if seekerInRange:
             moves = self._get_posible_moves()
@@ -17,7 +17,6 @@ class Hider(Agent):
                 if get_heuristic(move, seekerInRange) > length:
                     length = get_heuristic(move, seekerInRange)
                     pos = move
-            print(f"{self._position} {seekerInRange} {pos}")
             GameMaster.GameMaster.AgentMove(self, pos if pos else random.choice(moves))
         else:    
             GameMaster.GameMaster.AgentMove(self, random.choice(self._get_posible_moves()))
