@@ -9,7 +9,7 @@ class GameMaster:
     __hiderAnnounceInterval = 5
     __seekerObserveRange = 3
     __hiderObserveRange = 2
-    step = 0
+    step = 1
     __seeker: Seeker = Seeker(0, 0)
     __hiders: list[Hider] = []
     hiderMove = True
@@ -61,6 +61,7 @@ class GameMaster:
         screen.fill((255, 255, 255))
         for i in range(self._n):
             for j in range(self._m):
+                pygame.draw.rect(screen, (0, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize), 1)
                 if GameMaster.__map[i][j] == 1:
                     pygame.draw.rect(screen, (0, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
                 elif GameMaster.__map[i][j] == 2:
