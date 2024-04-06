@@ -117,10 +117,30 @@ class GameMaster:
             if GameMaster.__map[pos.x][pos.y] == 1:
                 return None
         return GameMaster.__seeker.getPosition()
+    
+    def menu(self, screen: pygame.Surface) -> None:
+        background = pygame.image.load("background.jpg")
+        background = pygame.transform.scale(background, (self._m * self._blockSize, self._n * self._blockSize))
+        screen.blit(background, (0, 0))
+        play_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 50, 200, 50)
+        pygame.draw.rect(screen, (0, 0, 0), play_button, 1)
+        font = pygame.font.Font(None, 36)
+        text = font.render("Play", True, (0, 0, 0))
+        text_rect = text.get_rect(center=play_button.center)
+        screen.blit(text, text_rect)
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if play_button.collidepoint(x, y):
+                        return
+            pygame.display.flip()
+        
 
-    def play(self):
-        pygame.time.Clock().tick(20)
-        screen = pygame.display.set_mode((self._m * self._blockSize, self._n * self._blockSize))
+    def gameLoop(self, screen : pygame.Surface) -> None:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -129,11 +149,17 @@ class GameMaster:
             self.__update_screen(screen)
             if self.is_game_over():
                 print("Game Over")
+                return
             GameMaster.__seeker.move(self.step)
             if GameMaster.hiderMove:
                 for hider in GameMaster.__hiders:
                     if hider.isFound(): continue
                     hider.move(self.step)
-
             GameMaster.step += 1
             pygame.time.wait(100)
+
+    def play(self):
+        pygame.time.Clock().tick(20)
+        screen = pygame.display.set_mode((self._m * self._blockSize, self._n * self._blockSize))
+        self.menu(screen)
+        self.gameLoop(screen)
