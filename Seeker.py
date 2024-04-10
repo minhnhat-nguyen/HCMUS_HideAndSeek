@@ -45,7 +45,6 @@ class Seeker(Agent):
                 self, random.choice(self._get_posible_moves())
             )
             return
-        print(f"{self.getPosition()} {self.__path[minID]}")
         GameMaster.GameMaster.AgentMove(
             self,
             (
