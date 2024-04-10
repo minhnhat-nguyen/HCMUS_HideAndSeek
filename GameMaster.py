@@ -150,19 +150,17 @@ class GameMaster:
             pygame.display.flip()
         
 
-    def gameLoop(self, screen : pygame.Surface) -> None:
+    def gameLoop(self, screen : pygame.Surface) -> str:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    return
             self.__update_screen(screen)
             if self.is_game_over():
                 if GameMaster.__seeker.point <= 0:
-                    print("Hiders Win")
+                    return "Hider Win!!"
                 else:
-                    print("Seeker Wins")
-                return
+                    return "Seeker Wins"
             GameMaster.__seeker.move(self.step)
             if GameMaster.hiderMove:
                 for hider in GameMaster.__hiders:
@@ -175,4 +173,12 @@ class GameMaster:
         pygame.time.Clock().tick(20)
         screen = pygame.display.set_mode((self._m * self._blockSize, self._n * self._blockSize))
         self.menu(screen)
-        self.gameLoop(screen)
+        result = self.gameLoop(screen)
+        while (True):
+            font = pygame.font.Font(None, int(1 / 8 * self._m * self._blockSize))
+            text = font.render(result, True, pygame.color.Color("red"))
+            text_rect = text.get_rect(center=(self._m * self._blockSize // 2, self._n * self._blockSize // 2))
+            screen.blit(text, text_rect)
+            pygame.display.flip()
+                
+
