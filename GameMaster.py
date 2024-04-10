@@ -174,11 +174,12 @@ class GameMaster:
         screen = pygame.display.set_mode((self._m * self._blockSize, self._n * self._blockSize))
         self.menu(screen)
         result = self.gameLoop(screen)
+        font = pygame.font.Font(None, int(1 / 8 * self._m * self._blockSize))
+        text = font.render(result, True, pygame.color.Color("red"))
+        text_rect = text.get_rect(center=(self._m * self._blockSize // 2, self._n * self._blockSize // 2))
         while (True):
-            font = pygame.font.Font(None, int(1 / 8 * self._m * self._blockSize))
-            text = font.render(result, True, pygame.color.Color("red"))
-            text_rect = text.get_rect(center=(self._m * self._blockSize // 2, self._n * self._blockSize // 2))
             screen.blit(text, text_rect)
             pygame.display.flip()
+            pygame.time.wait(100)
                 
 
