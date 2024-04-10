@@ -6,6 +6,7 @@ class Hider(Agent):
     def __init__(self, x: int, y: int) -> None:
         super().__init__(x, y)
         self.__isFound = False
+        self.point = 20
 
     def move(self, step: int) -> None:
         seekerInRange = GameMaster.GameMaster.hiderGetSurrounding(self)

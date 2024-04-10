@@ -8,6 +8,7 @@ class Seeker(Agent):
         super().__init__(x, y)
         self.__path: dict[uuid.UUID, list[position]] = {}
         self.__hiderLastPos: dict[uuid.UUID, position | None] = {}
+        self.point = 100
 
     def move(self, step: int) -> None:
         announcement = GameMaster.GameMaster.seekerGetAnnouncement()

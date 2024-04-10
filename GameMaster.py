@@ -35,6 +35,8 @@ class GameMaster:
             GameMaster.hidden_map[hider.getPosition().x][hider.getPosition().y] = 0
 
     def is_game_over(self) -> bool:
+        if GameMaster.__seeker.point <= 0:
+            return True
         for hider in GameMaster.__hiders:
             if not hider.isFound():
                 return False
@@ -43,13 +45,19 @@ class GameMaster:
     @staticmethod
     def AgentMove(agent: Hider | Seeker, pos: position) -> None:
         if pos not in agent._get_posible_moves(): raise ValueError("Invalid Move")
+        agent.point -= 1
         if (type(agent) == Hider and pos == GameMaster.__seeker.getPosition()):
+            GameMaster.__seeker.point += 20
             agent.markFound()
             GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
             return
         elif type(agent) == Seeker:
             for hider in GameMaster.__hiders:
                 if hider.getPosition() == pos:
+                    GameMaster.__seeker.point += 20
+                    hider.markFound()
+                    GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
+                if hider.point <= 0:
                     hider.markFound()
                     GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
         val = 3 if type(agent) == Seeker else 2
@@ -97,6 +105,8 @@ class GameMaster:
     @staticmethod
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
         if GameMaster.step % GameMaster.__hiderAnnounceInterval == 0:
+            for agent in GameMaster.__hiders:
+                agent.point += GameMaster.__hiderAnnounceInterval + 2
             return {
                 hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders
             }
@@ -148,7 +158,10 @@ class GameMaster:
                     return
             self.__update_screen(screen)
             if self.is_game_over():
-                print("Game Over")
+                if GameMaster.__seeker.point <= 0:
+                    print("Hiders Win")
+                else:
+                    print("Seeker Wins")
                 return
             GameMaster.__seeker.move(self.step)
             if GameMaster.hiderMove:
