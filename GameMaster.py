@@ -20,7 +20,7 @@ class GameMaster:
             resolution = pygame.display.Info()
             self._blockSize = min(resolution.current_w // (self._m + 2), 
                                   resolution.current_h // (self._n + 2)) 
-            GameMaster.__map = [[int(x) for x in line[:-1]] for line in file]
+            GameMaster.__map = [[int(x) for x in line.strip()] for _ in range(self._n) for line in [file.readline()]]
             for i in range(self._n):
                 for j in range(self._m):
                     if GameMaster.__map[i][j] == 2:
