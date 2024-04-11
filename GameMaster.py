@@ -66,6 +66,7 @@ class GameMaster:
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = val
 
     def __update_screen(self, screen: pygame.Surface):
+        smfont = pygame.font.Font(None, 36)
         screen.fill((255, 255, 255))
         for i in range(self._n):
             for j in range(self._m):
@@ -76,6 +77,13 @@ class GameMaster:
                     pygame.draw.rect(screen, (0, 255, 100), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
                 elif GameMaster.__map[i][j] == 3:
                     pygame.draw.rect(screen, (255, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
+        seeker_point = smfont.render(str(GameMaster.__seeker.point), True, (0, 0, 0))
+        screen.blit(seeker_point, (GameMaster.__seeker.getPosition().y * self._blockSize, GameMaster.__seeker.getPosition().x * self._blockSize))
+        for hider in GameMaster.__hiders:
+            if hider.isFound():
+                continue
+            hider_point = smfont.render(str(hider.point), True, (0, 0, 0))
+            screen.blit(hider_point, (hider.getPosition().y * self._blockSize, hider.getPosition().x * self._blockSize))
         pygame.display.flip()
 
     @staticmethod
