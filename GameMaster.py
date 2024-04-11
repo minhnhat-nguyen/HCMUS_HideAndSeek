@@ -14,13 +14,14 @@ class GameMaster:
     __hiders: list[Hider] = []
     hiderMove = True
     def __init__(self, filename: str) -> None:
+        pygame.init()
         with open(filename, "r") as file:
-            pygame.init()
             self._n, self._m = [int(x) for x in next(file).split()]
             resolution = pygame.display.Info()
             self._blockSize = min(resolution.current_w // (self._m + 2), 
                                   resolution.current_h // (self._n + 2)) 
-            GameMaster.__map = [[int(x) for x in line.strip()] for _ in range(self._n) for line in [file.readline()]]
+            lines = file.readlines()
+            GameMaster.__map = [[int(x) for x in lines[i].strip().replace(' ', '')] for i in range(self._n)  ]
             for i in range(self._n):
                 for j in range(self._m):
                     if GameMaster.__map[i][j] == 2:
@@ -197,6 +198,10 @@ class GameMaster:
         text = font.render(result, True, pygame.color.Color("red"))
         text_rect = text.get_rect(center=(self._m * self._blockSize // 2, self._n * self._blockSize // 2))
         while (True):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
             screen.blit(text, text_rect)
             pygame.display.flip()
             pygame.time.wait(100)
