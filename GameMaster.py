@@ -132,12 +132,18 @@ class GameMaster:
         background = pygame.image.load("background.jpg")
         background = pygame.transform.scale(background, (self._m * self._blockSize, self._n * self._blockSize))
         screen.blit(background, (0, 0))
-        play_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 50, 200, 50)
-        pygame.draw.rect(screen, (0, 0, 0), play_button, 1)
         font = pygame.font.Font(None, 36)
-        text = font.render("Play", True, (0, 0, 0))
-        text_rect = text.get_rect(center=play_button.center)
-        screen.blit(text, text_rect)
+        play_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 50, 200, 50)
+        level_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 150, 200, 50)
+        level_button_color = (0, 255, 0) if GameMaster.hiderMove else (255, 0, 0)
+        pygame.draw.rect(screen, (0, 0, 0), play_button, 1)
+        pygame.draw.rect(screen, level_button_color, level_button)
+        play_text = font.render("Play", True, (0, 0, 0))
+        level_text = font.render("Hider Moveable", True, (0, 0, 0))
+        text_rect = play_text.get_rect(center=play_button.center)
+        level_rect = level_text.get_rect(center=level_button.center)
+        screen.blit(play_text, text_rect)
+        screen.blit(level_text, level_rect)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -147,6 +153,11 @@ class GameMaster:
                     x, y = event.pos
                     if play_button.collidepoint(x, y):
                         return
+                    if level_button.collidepoint(x, y):
+                        GameMaster.hiderMove = not GameMaster.hiderMove
+                        level_button_color = (0, 255, 0) if GameMaster.hiderMove else (255, 0, 0)
+                        pygame.draw.rect(screen, level_button_color, level_button)
+                        screen.blit(level_text, level_rect)
             pygame.display.flip()
         
 
