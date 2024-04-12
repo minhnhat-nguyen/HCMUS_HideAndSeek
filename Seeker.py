@@ -27,15 +27,15 @@ class Seeker(Agent):
                 self.__path.pop(id, None)
         self.__path = {}
         
-        if (step % 1 == 0):
-            for id, pos in self.__hiderLastPos.items():
-                if not pos:
-                    continue
-                self.__path[id] = a_star(self.getPosition(), pos)
-                if not self.__path[id]:
-                    self.__path.pop(id)
-                elif self.__path[id][0] == self.getPosition():
-                    self.__path[id].pop(0)
+
+        for id, pos in self.__hiderLastPos.items():
+            if not pos:
+                continue
+            self.__path[id] = a_star(self.getPosition(), pos)
+            if not self.__path[id]:
+                self.__path.pop(id)
+            elif self.__path[id][0] == self.getPosition():
+                self.__path[id].pop(0)
 
         minID = None
         minLen = float("inf")
