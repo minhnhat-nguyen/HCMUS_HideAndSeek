@@ -13,6 +13,7 @@ class GameMaster:
     __seeker: Seeker = Seeker(0, 0)
     __hiders: list[Hider] = []
     hiderMove = True
+    pointPenalty = True
     def __init__(self, filename: str) -> None:
         pygame.init()
         with open(filename, "r") as file:
@@ -36,7 +37,7 @@ class GameMaster:
             GameMaster.hidden_map[hider.getPosition().x][hider.getPosition().y] = 0
 
     def is_game_over(self) -> bool:
-        if GameMaster.__seeker.point <= 0:
+        if GameMaster.__seeker.point <= 0 and GameMaster.pointPenalty:
             return True
         for hider in GameMaster.__hiders:
             if not hider.isFound():
@@ -78,6 +79,9 @@ class GameMaster:
                     pygame.draw.rect(screen, (0, 255, 100), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
                 elif GameMaster.__map[i][j] == 3:
                     pygame.draw.rect(screen, (255, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize))
+        if not GameMaster.pointPenalty: 
+            pygame.display.flip()
+            return
         seeker_point = smfont.render(str(GameMaster.__seeker.point), True, (0, 0, 0))
         screen.blit(seeker_point, (GameMaster.__seeker.getPosition().y * self._blockSize, GameMaster.__seeker.getPosition().x * self._blockSize))
         for hider in GameMaster.__hiders:
@@ -144,15 +148,21 @@ class GameMaster:
         font = pygame.font.Font(None, 36)
         play_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 50, 200, 50)
         level_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 150, 200, 50)
+        point_button = pygame.Rect(self._m * self._blockSize * 2 / 3, 250, 200, 50)
         level_button_color = (0, 255, 0) if GameMaster.hiderMove else (255, 0, 0)
+        point_button_color = (0, 255, 0) if GameMaster.pointPenalty else (255, 0, 0)
         pygame.draw.rect(screen, (0, 0, 0), play_button, 1)
         pygame.draw.rect(screen, level_button_color, level_button)
+        pygame.draw.rect(screen, point_button_color, point_button)
         play_text = font.render("Play", True, (0, 0, 0))
         level_text = font.render("Hider Moveable", True, (0, 0, 0))
+        point_text = font.render("Point Penalty", True, (0, 0, 0))
         text_rect = play_text.get_rect(center=play_button.center)
         level_rect = level_text.get_rect(center=level_button.center)
+        point_rect = point_text.get_rect(center=point_button.center)
         screen.blit(play_text, text_rect)
         screen.blit(level_text, level_rect)
+        screen.blit(point_text, point_rect)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -167,6 +177,11 @@ class GameMaster:
                         level_button_color = (0, 255, 0) if GameMaster.hiderMove else (255, 0, 0)
                         pygame.draw.rect(screen, level_button_color, level_button)
                         screen.blit(level_text, level_rect)
+                    if point_button.collidepoint(x, y):
+                        GameMaster.pointPenalty = not GameMaster.pointPenalty
+                        point_button_color = (0, 255, 0) if GameMaster.pointPenalty else (255, 0, 0)
+                        pygame.draw.rect(screen, point_button_color, point_button)
+                        screen.blit(point_text, point_rect)
             pygame.display.flip()
         
 
