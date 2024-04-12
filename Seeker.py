@@ -1,4 +1,4 @@
-from pathfinder import a_star, position, get_heuristic
+from pathfinder import a_star, position, getChebyshev
 from Agent import Agent
 import GameMaster, uuid, random
 
@@ -52,7 +52,7 @@ class Seeker(Agent):
             self,
             (
                 self.__path[minID].pop(0)
-                if len(self.__path[minID]) >= 5 or random.random() < mapFromTo(len(self.__path[minID]), 0, 5, 0.8, 1)
+                if len(self.__path[minID]) >= 5 or random.random() < mapFromTo(len(self.__path[minID]), 0, 5, 0.9, 1)
                 else random.choice(self._get_posible_moves())
             ),
         )

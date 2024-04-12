@@ -39,8 +39,6 @@ def get_possible_moves(x: int, y: int) -> list[position]:
     m = len(GameMaster.GameMaster.hidden_map[0])
     for i in range(-1, 2):
         for j in range(-1, 2):
-            if i == 0 and j == 0:
-                continue
             if (
                 0 <= x + i < n
                 and 0 <= y + j < m
@@ -50,8 +48,11 @@ def get_possible_moves(x: int, y: int) -> list[position]:
     return moves
 
 
-def get_heuristic(start: position, target: position) -> float:
+def getChebyshev(start: position, target: position) -> float:
     return max(abs(start.x - target.x), abs(start.y - target.y))
+
+def getManhattan(start: position, target: position) -> float:
+    return abs(start.x - target.x) + abs(start.y - target.y)
 
 
 def a_star(start: position, target: position) -> list[position]:
@@ -62,7 +63,7 @@ def a_star(start: position, target: position) -> list[position]:
     g = [[float("inf") for _ in range(m)] for _ in range(n)]
     g[start.x][start.y] = 0
     f = [[float("inf") for _ in range(m)] for _ in range(n)]
-    f[start.x][start.y] = get_heuristic(start, target)
+    f[start.x][start.y] = getChebyshev(start, target)
     pq = [PriorityQueueItem(f[start.x][start.y], start)]
     while pq:
         current = heapq.heappop(pq).pos
@@ -79,7 +80,7 @@ def a_star(start: position, target: position) -> list[position]:
             new_g = g[current.x][current.y] + 1
             if new_g < g[next.x][next.y]:
                 g[next.x][next.y] = new_g
-                f[next.x][next.y] = new_g + get_heuristic(next, target)
+                f[next.x][next.y] = new_g + getChebyshev(next, target)
                 parent[next.x][next.y] = current
                 heapq.heappush(pq, PriorityQueueItem(f[next.x][next.y], next))
     return []

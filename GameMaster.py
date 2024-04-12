@@ -47,7 +47,8 @@ class GameMaster:
     @staticmethod
     def AgentMove(agent: Hider | Seeker, pos: position) -> None:
         if pos not in agent._get_posible_moves(): raise ValueError("Invalid Move")
-        agent.point -= 1
+        if (agent.getPosition() != pos):
+            agent.point -= 1
         if (type(agent) == Hider and pos == GameMaster.__seeker.getPosition()):
             GameMaster.__seeker.point += 20
             agent.markFound()
