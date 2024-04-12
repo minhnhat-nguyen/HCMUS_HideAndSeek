@@ -195,7 +195,7 @@ class GameMaster:
         self.menu(screen)
         result = self.gameLoop(screen)
         font = pygame.font.Font(None, int(1 / 8 * self._m * self._blockSize))
-        text = font.render(result, True, pygame.color.Color("red"))
+        text = font.render(result, True, pygame.color.Color("red") if result == "Seeker Wins" else pygame.color.Color("green"))
         text_rect = text.get_rect(center=(self._m * self._blockSize // 2, self._n * self._blockSize // 2))
         while (True):
             for event in pygame.event.get():

@@ -2,6 +2,9 @@ from pathfinder import a_star, position, get_heuristic
 from Agent import Agent
 import GameMaster, uuid, random
 
+def mapFromTo(x,a,b,c,d):
+    y=(x-a)/(b-a)*(d-c)+c
+    return y
 
 class Seeker(Agent):
     def __init__(self, x: int, y: int) -> None:
@@ -49,7 +52,7 @@ class Seeker(Agent):
             self,
             (
                 self.__path[minID].pop(0)
-                if len(self.__path[minID]) >= 5 or random.random() < 0.90
+                if len(self.__path[minID]) >= 5 or random.random() < mapFromTo(len(self.__path[minID]), 0, 5, 0.8, 1)
                 else random.choice(self._get_posible_moves())
             ),
         )
