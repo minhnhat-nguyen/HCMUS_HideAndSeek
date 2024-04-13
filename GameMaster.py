@@ -61,9 +61,6 @@ class GameMaster:
                     GameMaster.__seeker.point += 20
                     hider.markFound()
                     GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
-                if hider.point <= 0:
-                    hider.markFound()
-                    GameMaster.__map[hider.getPosition().x][hider.getPosition().y] = 0
         val = 3 if type(agent) == Seeker else 2
         GameMaster.__map[agent.getPosition().x][agent.getPosition().y] = 0
         agent._position = pos
@@ -90,11 +87,6 @@ class GameMaster:
             return
         seeker_point = smfont.render(str(GameMaster.__seeker.point), True, (0, 0, 0))
         screen.blit(seeker_point, (GameMaster.__seeker.getPosition().y * self._blockSize, GameMaster.__seeker.getPosition().x * self._blockSize))
-        for hider in GameMaster.__hiders:
-            if hider.isFound():
-                continue
-            hider_point = smfont.render(str(hider.point), True, (0, 0, 0))
-            screen.blit(hider_point, (hider.getPosition().y * self._blockSize, hider.getPosition().x * self._blockSize))
         pygame.display.flip()
 
     @staticmethod
@@ -124,8 +116,6 @@ class GameMaster:
     @staticmethod
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
         if GameMaster.step % GameMaster.__hiderAnnounceInterval == 0:
-            for hider in GameMaster.__hiders:
-                hider.point += GameMaster.__hiderAnnounceInterval + 2
             GameMaster.lastAnnounce = {hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders}
             return GameMaster.lastAnnounce
         return None
