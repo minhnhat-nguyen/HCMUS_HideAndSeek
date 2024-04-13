@@ -14,6 +14,7 @@ class GameMaster:
     __hiders: list[Hider] = []
     hiderMove = True
     pointPenalty = True
+    lastAnnounce : dict[uuid.UUID, position | None] | None = None
     def __init__(self, filename: str) -> None:
         pygame.init()
         with open(filename, "r") as file:
@@ -71,6 +72,10 @@ class GameMaster:
     def __update_screen(self, screen: pygame.Surface):
         smfont = pygame.font.Font(None, 36)
         screen.fill((255, 255, 255))
+        if GameMaster.lastAnnounce:
+            for id, pos in GameMaster.lastAnnounce.items():
+                if pos:
+                    pygame.draw.rect(screen, (255, 192, 203), (pos.y * self._blockSize, pos.x * self._blockSize, self._blockSize, self._blockSize))
         for i in range(self._n):
             for j in range(self._m):
                 pygame.draw.rect(screen, (0, 0, 0), (j * self._blockSize, i * self._blockSize, self._blockSize, self._blockSize), 1)
@@ -119,11 +124,10 @@ class GameMaster:
     @staticmethod
     def seekerGetAnnouncement() -> dict[uuid.UUID, position | None] | None:
         if GameMaster.step % GameMaster.__hiderAnnounceInterval == 0:
-            for agent in GameMaster.__hiders:
-                agent.point += GameMaster.__hiderAnnounceInterval + 2
-            return {
-                hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders
-            }
+            for hider in GameMaster.__hiders:
+                hider.point += GameMaster.__hiderAnnounceInterval + 2
+            GameMaster.lastAnnounce = {hider.id: hider.announcePos()[1] for hider in GameMaster.__hiders}
+            return GameMaster.lastAnnounce
         return None
 
     @staticmethod

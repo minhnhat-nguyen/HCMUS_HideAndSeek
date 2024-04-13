@@ -31,10 +31,14 @@ class Seeker(Agent):
         for id, pos in self.__hiderLastPos.items():
             if not pos:
                 continue
-            self.__path[id] = a_star(self.getPosition(), pos)
+            if pos == self._position:
+                self.__hiderLastPos[id] = None
+                self.__path.pop(id)
+                continue
+            self.__path[id] = a_star(self._position, pos)
             if not self.__path[id]:
                 self.__path.pop(id)
-            elif self.__path[id][0] == self.getPosition():
+            elif self.__path[id][0] == self._position:
                 self.__path[id].pop(0)
 
         minID = None
@@ -52,7 +56,7 @@ class Seeker(Agent):
             self,
             (
                 self.__path[minID].pop(0)
-                if len(self.__path[minID]) >= 5 or random.random() < mapFromTo(len(self.__path[minID]), 0, 5, 0.9, 1)
+                if len(self.__path[minID]) >= 5 or random.random() < mapFromTo(len(self.__path[minID]), 0, 5, 0.95, 1)
                 else random.choice(self._get_posible_moves())
             ),
         )

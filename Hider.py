@@ -18,12 +18,14 @@ class Hider(Agent):
         if self.__seekerLastPos is not None:
             pos = self._position
             for move in moves:
-                nm = getChebyshev(move, self.__seekerLastPos)
+                """nm = getChebyshev(move, self.__seekerLastPos)
                 cm = getChebyshev(pos, self.__seekerLastPos)
                 if nm > cm:
                     pos = move
                 elif nm == cm:
                     if getManhattan(move, self.__seekerLastPos) >= getManhattan(pos, self.__seekerLastPos):
+                        pos = move"""
+                if getManhattan(move, self.__seekerLastPos) >= getManhattan(pos, self.__seekerLastPos):
                         pos = move
 
             GameMaster.GameMaster.AgentMove(self, pos if pos else random.choice(moves))
