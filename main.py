@@ -1,4 +1,4 @@
 import GameMaster
 
-game = GameMaster.GameMaster('map4.txt')
+game = GameMaster.GameMaster('map1.txt')
 game.play()

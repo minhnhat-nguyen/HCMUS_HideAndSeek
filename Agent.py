@@ -9,7 +9,6 @@ class Agent:
         self.id = uuid.uuid4()
         self._position = position(x, y)
         self.point = 100
-        self.path = []
 
     @abstractmethod
     def move(self, step: int) -> None:
